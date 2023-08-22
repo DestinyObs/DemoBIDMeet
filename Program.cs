@@ -1,3 +1,5 @@
+using DemoBIDMeet.Hubs;
+
 namespace DemoBIDMeet
 {
     public class Program
@@ -7,6 +9,7 @@ namespace DemoBIDMeet
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            builder.Services.AddSignalR();
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -14,6 +17,12 @@ namespace DemoBIDMeet
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
+            app.UseRouting();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapHub<WebRTCHub>("/webrtcHub");
+                endpoints.MapControllers();
+            });
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -25,7 +34,7 @@ namespace DemoBIDMeet
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
+            
 
             app.MapControllers();
 
